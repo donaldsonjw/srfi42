@@ -1,0 +1,63 @@
+* SRFI-42: Eager Comprehensions
+
+** Description
+  The srfi library is an implementation of [[https://srfi.schemers.org/srfi-42/srfi-42.html][SRFI 42]] for Bigloo
+  scheme. It is a Bigloo adaption of the sample implentation and Alex Shin's
+  Guache port.
+
+  Both the native and jvm backends are supported but Bigloo 4.5b or
+  greater is required. In addition, the library has
+  been extended to support homogenous vector comprehensions. These
+  are below. They work excatly as vector-ec and vector-of-length-ec
+  but upon homogenous vectors.
+
+  + (*s8vector-ec* <qualifier>* <expression>)
+  + (*u8vector-ec* <qualifier>* <expression>)
+  + (*s16vector-ec* <qualifier>* <expression>)
+  + (*u16vector-ec* <qualifier>* <expression>)
+  + (*s32vector-ec* <qualifier>* <expression>)
+  + (*u32vector-ec* <qualifier>* <expression>)
+  + (*s64vector-ec* <qualifier>* <expression>)
+  + (*u64vector-ec* <qualifier>* <expression>)
+  + (*f32vector-ec* <qualifier>* <expression>)
+  + (*f64vector-ec* <qualifier>* <expression>)
+    The <TAGv>ector of all values of <expression>.
+    Think of it as (list-><TAG>vector (list-ec <qualifier>*
+    <expression>)).
+     
+  + (*s8vector-of-length-ec* <k> <qualifier>* <expression>)
+  + (*u8vector-of-length-ec* <k> <qualifier>* <expression>)
+  + (*s16vector-of-length-ec* <k> <qualifier>* <expression>)
+  + (*u16vector-of-length-ec* <k> <qualifier>* <expression>)
+  + (*s32vector-of-length-ec* <k> <qualifier>* <expression>)
+  + (*u32vector-of-length-ec* <k> <qualifier>* <expression>)
+  + (*s64vector-of-length-ec* <k> <qualifier>* <expression>)
+  + (*u64vector-of-length-ec* <k> <qualifier>* <expression>)
+  + (*f32vector-of-length-ec* <k> <qualifier>* <expression>)
+  + (*f6vector-of-length-ec* <k> <qualifier>* <expression>)
+    The <TAG>vector of all values of <expression>, of which there must be
+    exactly <k>. This comprehension behaves like <TAG>vector-ec but can be
+    implemented more efficiently.  
+     
+** Building
+  Both the bigloo native and jvm backends are supported. To build,
+  execute:
+    #+begin_src shell
+  ./configure --prefix=<installation path prefix>; make
+#+end_src
+  where =<installation path prefix>= is the desired installation path
+  prefix (e.g, =/usr/local=). You usually want the path prefix to match
+  that used by Bigloo itself.
+  
+** Installation
+  To install the library, execute:
+#+begin_src shell
+  make install
+#+end_src 
+
+** Tests
+To run the tests execute:
+
+  #+begin_src shell
+  make test
+#+end_src
