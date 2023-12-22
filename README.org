@@ -21,6 +21,7 @@
   + (*u64vector-ec* <qualifier>* <expression>)
   + (*f32vector-ec* <qualifier>* <expression>)
   + (*f64vector-ec* <qualifier>* <expression>)
+    
     The <TAGv>ector of all values of <expression>.
     Think of it as (list-><TAG>vector (list-ec <qualifier>*
     <expression>)).
@@ -35,6 +36,7 @@
   + (*u64vector-of-length-ec* <k> <qualifier>* <expression>)
   + (*f32vector-of-length-ec* <k> <qualifier>* <expression>)
   + (*f6vector-of-length-ec* <k> <qualifier>* <expression>)
+    
     The <TAG>vector of all values of <expression>, of which there must be
     exactly <k>. This comprehension behaves like <TAG>vector-ec but can be
     implemented more efficiently.  
