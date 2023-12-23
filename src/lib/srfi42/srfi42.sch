@@ -608,7 +608,7 @@
      ;; absolutely necessary.
      (if (exact-integer? arg1)
        (srfi-42-range cc var 0 arg1 1)
-       (srfi-42-*vector range-length range-ref cc var arg1)) )
+       (srfi-42-*vector srfi42-range-length srfi42-range-ref cc var arg1)) )
     ((_ cc var arg1 arg2)
      (srfi-42-range cc var arg1 arg2 1) )
 

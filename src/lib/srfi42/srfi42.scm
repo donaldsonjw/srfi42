@@ -43,6 +43,9 @@
 ;     mentioned after the definition with a heading.
 
 (module srfi42
+   (cond-expand
+      ((library srfi196)
+       (library srfi196)))
    (include "srfi42.sch")
    (export (dispatch-union d1 d2)
            (make-initial-:-dispatch)
@@ -51,8 +54,8 @@
            (srfi42-error message . rest)
            srfi-42--dispatch
            exact-integer?
-           (range-length r)
-           (range-ref r i)
+           (srfi42-range-length r)
+           (srfi42-range-ref r i)
            (inline ->flonum::real v)
            (inline ->uint8::uint8 v)
            (inline ->int8::int8 v)
@@ -70,12 +73,26 @@
 
 (define exact-integer? integer?)
 
-(define (range-length r)
-   (error "range-length" "ranges not supported yet" r))
+(cond-expand ((library srfi196)
+              (define (srfi42-range-length r)
+                 (range-length r))
+              
+              (define (srfi42-range-ref r i)
+                 (range-ref r i))
 
-(define (range-ref r i)
-   (error "range-ref" "ranges not supported yet" r))
+               (define (srfi42-range? r)
+                  (range? r)))
+             
+             (else
+              (define (srfi42-range-length r)
+                 (error "range-length" "ranges are not supported" r))
+              
+              (define (srfi42-range-ref r i)
+                 (error "range-ref" "ranges are not supported" r))
 
+              (define (srfi42-range? r)
+                 #f)))
+ 
 (define (dispatch-union d1 d2)
   (lambda (args)
     (let ((g1 (d1 args)) (g2 (d2 args)))
@@ -87,6 +104,7 @@
                   (srfi42-error "dispatching conflict" args (d1 '()) (d2 '())) )
               g1 )
           (if g2 g2 #f) ))))
+
 
 ;; numeric conversion routines 
 (define-inline (->uint8 v)
@@ -408,10 +426,8 @@
               ;  (srfi-42-generator-proc (srfi-42-collection a1))]
               ; [(applicable? a1)
               ;  (srfi-42-generator-proc (srfi-42-generator a1))]
-              ;; This would trigger autoloading data.range, so we don't
-              ;; support it for now.
-              ;; [(range? a1)
-              ;;  (srfi-42-generator-proc (srfi-42-range a1))]
+              [(srfi42-range? a1)
+               (srfi-42-generator-proc (srfi-42-range a1))]              
               [else #f]))]
       [(2) (let ([a1 (car args)] [a2 (cadr args)])
              (cond
@@ -421,8 +437,26 @@
                (srfi-42-generator-proc (srfi-42-string a1 a2)) ]
               [(and (vector? a1) (vector? a2))
                (srfi-42-generator-proc (srfi-42-vector a1 a2)) ]
-              ; [(and (uvector? a1) (uvector? a2))
-              ;  (srfi-42-generator-proc (srfi-42-uvector a1 a2)) ]
+              [(and (s8vector? a1) (s8vector? a2))
+               (srfi-42-generator-proc (srfi-42-s8vector a1 a2))]
+              [(and (u8vector? a1) (u8vector? a2))
+               (srfi-42-generator-proc (srfi-42-u8vector a1 a2))]
+              [(and (s16vector? a1) (s16vector? a2))
+               (srfi-42-generator-proc (srfi-42-s16vector a1 a2))]
+              [(and (u16vector? a1) (u16vector? a2))
+               (srfi-42-generator-proc (srfi-42-u16vector a1 a2))]
+              [(and (s32vector? a1) (s32vector? a2))
+               (srfi-42-generator-proc (srfi-42-s32vector a1 a2))]
+              [(and (u32vector? a1) (u32vector? a2))
+               (srfi-42-generator-proc (srfi-42-u32vector a1 a2))]
+              [(and (s64vector? a1) (s64vector? a2))
+               (srfi-42-generator-proc (srfi-42-s64vector a1 a2))]
+              [(and (u64vector? a1) (u64vector? a2))
+               (srfi-42-generator-proc (srfi-42-u64vector a1 a2))]
+              [(and (f32vector? a1) (f32vector? a2))
+               (srfi-42-generator-proc (srfi-42-f32vector a1 a2))]
+              [(and (f64vector? a1) (f64vector? a2))
+               (srfi-42-generator-proc (srfi-42-f64vector a1 a2))]
               [(and (integer? a1) (exact? a1) (integer? a2) (exact? a2))
                (srfi-42-generator-proc (srfi-42-range a1 a2)) ]
               [(and (real? a1) (real? a2))
@@ -440,8 +474,26 @@
                (srfi-42-generator-proc (srfi-42-string a1 a2 a3)) ]
               [(and (vector? a1) (vector? a2) (vector? a3))
                (srfi-42-generator-proc (srfi-42-vector a1 a2 a3)) ]
-              ; [(and (uvector? a1) (uvector? a2) (uvector? a3))
-              ;  (srfi-42-generator-proc (srfi-42-uvector a1 a2 a3)) ]
+              [(and (s8vector? a1) (s8vector? a2) (s8vector? a3))
+               (srfi-42-generator-proc (srfi-42-s8vector a1 a2 a3))]
+              [(and (u8vector? a1) (u8vector? a2) (u8vector? a3))
+               (srfi-42-generator-proc (srfi-42-u8vector a1 a2 a3))]
+              [(and (s16vector? a1) (s16vector? a2) (s16vector? a3))
+               (srfi-42-generator-proc (srfi-42-s16vector a1 a2 a3))]
+              [(and (u16vector? a1) (u16vector? a2) (u16vector? a3))
+               (srfi-42-generator-proc (srfi-42-u16vector a1 a2 a3))]
+              [(and (s32vector? a1) (s32vector? a2) (s32vector? a3))
+               (srfi-42-generator-proc (srfi-42-s32vector a1 a2 a3))]
+              [(and (u32vector? a1) (u32vector? a2) (u32vector? a3))
+               (srfi-42-generator-proc (srfi-42-u32vector a1 a2 a3))]
+              [(and (s64vector? a1) (s64vector? a2) (s64vector? a3))
+               (srfi-42-generator-proc (srfi-42-s64vector a1 a2 a3))]
+              [(and (u64vector? a1) (u64vector? a2) (u64vector? a3))
+               (srfi-42-generator-proc (srfi-42-u64vector a1 a2 a3))]
+              [(and (f32vector? a1) (f32vector? a2) (f32vector? a3))
+               (srfi-42-generator-proc (srfi-42-f32vector a1 a2 a3))]
+              [(and (f64vector? a1) (f64vector? a2) (f64vector? a3))
+               (srfi-42-generator-proc (srfi-42-f64vector a1 a2 a3))]
               [(and (integer? a1) (exact? a1)
                     (integer? a2) (exact? a2)
                     (integer? a3) (exact? a3))
@@ -456,8 +508,26 @@
               (srfi-42-generator-proc (srfi-42-string (apply string-append args)))]
              [(every vector? args)
               (srfi-42-generator-proc (srfi-42-vector (apply vector-append args)))]
-             ; [(every uvector? args)
-             ;  (srfi-42-generator-proc (srfi-42-list (apply append (map uvector->list args))))]
+              [(every s8vector? args)
+               (srfi-42-generator-proc (srfi-42-list (apply append (map s8vector->list args))))]
+              [(every u8vector? args)
+               (srfi-42-generator-proc (srfi-42-list (apply append (map u8vector->list args))))]
+              [(every s16vector? args)
+               (srfi-42-generator-proc (srfi-42-list (apply append (map s16vector->list args))))]
+              [(every u16vector? args)
+               (srfi-42-generator-proc (srfi-42-list (apply append (map u16vector->list args))))]
+              [(every s32vector? args)
+               (srfi-42-generator-proc (srfi-42-list (apply append (map s32vector->list args))))]
+              [(every u32vector? args)
+               (srfi-42-generator-proc (srfi-42-list (apply append (map u32vector->list args))))]
+              [(every s64vector? args)
+               (srfi-42-generator-proc (srfi-42-list (apply append (map s64vector->list args))))]
+              [(every u64vector? args)
+               (srfi-42-generator-proc (srfi-42-list (apply append (map u64vector->list args))))]
+              [(every f32vector? args)
+               (srfi-42-generator-proc (srfi-42-list (apply append (map f32vector->list args))))]
+              [(every f64vector? args)
+               (srfi-42-generator-proc (srfi-42-list (apply append (map f64vector->list args))))]
              [else #f])])))
 
 (define srfi-42--dispatch

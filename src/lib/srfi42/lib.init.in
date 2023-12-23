@@ -4,3 +4,12 @@
    :basename "srfi42"
    :module-eval 'srfi42_make_lib)
 
+
+(cond-expand
+   ((and bigloo-compile (library srfi196))
+    (use-library! 'srfi196)))
+
+(cond-expand
+   (bigloo-compile
+    (use-library! 'srfi1)))
+          

@@ -20,7 +20,7 @@
               #t
               ((+ i 1)) )
          j )
-      => '(10 9 8 7) )
+      => '(10 9 8 7))
 
    (my-check (list-ec (:let x 1) x) => '(1))
    (my-check (list-ec (:let x 1) (:let y (+ x 1)) y) => '(2))

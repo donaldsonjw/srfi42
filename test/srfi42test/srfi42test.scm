@@ -19,6 +19,7 @@
            homogenous_vector_ec_tests
            homogenous_vector_of_length_ec_tests
            type_generators_tests
+           homogenous_vector_generator_tests
            special_generators_tests
            dispatching_generator_tests
            index_variable_tests
@@ -36,6 +37,8 @@
 (homogenous-vector-of-length-ec-tests)
 
 (typed-generators-tests)
+
+(homogenous-vector-generator-tests)
 
 (special-generators-tests)
 
